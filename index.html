@@ -24,7 +24,7 @@
         }
         .problem {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: auto repeat(4, 1fr);
             gap: 5px;
             margin-bottom: 20px;
             border: 2px dotted #333;
@@ -34,6 +34,11 @@
             text-align: right;
             padding: 5px;
             font-size: 24px;
+        }
+        .place-value {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center !important;
         }
         .regroup {
             font-size: 16px;
@@ -47,6 +52,11 @@
         .regroup-input {
             width: 20px;
             font-size: 16px;
+        }
+        .addition-line {
+            grid-column: 1 / -1;
+            border-bottom: 2px solid #333;
+            margin-bottom: 5px;
         }
         button {
             display: inline-block;
@@ -113,6 +123,11 @@
             const formattedNum2 = formatNumber(num2);
             return `
                 <div class="problem" id="problem-${index}">
+                    <div></div>
+                    <div class="place-value">Th</div>
+                    <div class="place-value">H</div>
+                    <div class="place-value">T</div>
+                    <div class="place-value">O</div>
                     <div class="regroup">
                         <input type="number" class="regroup-input" id="regroup-${index}-0" min="0" max="9">
                         <input type="number" class="regroup-input" id="regroup-${index}-1" min="0" max="9">
@@ -127,6 +142,7 @@
                     <div>${formattedNum2[1]}</div>
                     <div>${formattedNum2[2]}</div>
                     <div>${formattedNum2[3]}</div>
+                    <div class="addition-line"></div>
                     <div></div>
                     <div><input type="number" id="answer-${index}-0" min="0" max="9"></div>
                     <div><input type="number" id="answer-${index}-1" min="0" max="9"></div>
