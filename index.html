@@ -24,7 +24,7 @@
         }
         .problem {
             display: grid;
-            grid-template-columns: auto repeat(4, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 5px;
             margin-bottom: 20px;
             border: 2px dotted #333;
@@ -39,10 +39,9 @@
             font-size: 14px;
             font-weight: bold;
             text-align: center !important;
-        }
-        .regroup {
-            font-size: 16px;
-            color: #666;
+            background-color: #e6f3ff;
+            border-radius: 5px;
+            padding: 2px 0;
         }
         input {
             width: 40px;
@@ -52,6 +51,8 @@
         .regroup-input {
             width: 20px;
             font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
         }
         .addition-line {
             grid-column: 1 / -1;
@@ -123,16 +124,14 @@
             const formattedNum2 = formatNumber(num2);
             return `
                 <div class="problem" id="problem-${index}">
-                    <div></div>
                     <div class="place-value">Th</div>
                     <div class="place-value">H</div>
                     <div class="place-value">T</div>
                     <div class="place-value">O</div>
-                    <div class="regroup">
-                        <input type="number" class="regroup-input" id="regroup-${index}-0" min="0" max="9">
-                        <input type="number" class="regroup-input" id="regroup-${index}-1" min="0" max="9">
-                        <input type="number" class="regroup-input" id="regroup-${index}-2" min="0" max="9">
-                    </div>
+                    <div><input type="number" class="regroup-input" id="regroup-${index}-0" min="0" max="9"></div>
+                    <div><input type="number" class="regroup-input" id="regroup-${index}-1" min="0" max="9"></div>
+                    <div><input type="number" class="regroup-input" id="regroup-${index}-2" min="0" max="9"></div>
+                    <div><input type="number" class="regroup-input" id="regroup-${index}-3" min="0" max="9"></div>
                     <div>${formattedNum1[0]}</div>
                     <div>${formattedNum1[1]}</div>
                     <div>${formattedNum1[2]}</div>
@@ -141,9 +140,7 @@
                     <div>${formattedNum2[0]}</div>
                     <div>${formattedNum2[1]}</div>
                     <div>${formattedNum2[2]}</div>
-                    <div>${formattedNum2[3]}</div>
                     <div class="addition-line"></div>
-                    <div></div>
                     <div><input type="number" id="answer-${index}-0" min="0" max="9"></div>
                     <div><input type="number" id="answer-${index}-1" min="0" max="9"></div>
                     <div><input type="number" id="answer-${index}-2" min="0" max="9"></div>
@@ -182,7 +179,8 @@
                 const userRegroup = [
                     parseInt(document.getElementById(`regroup-${i}-0`).value || '0'),
                     parseInt(document.getElementById(`regroup-${i}-1`).value || '0'),
-                    parseInt(document.getElementById(`regroup-${i}-2`).value || '0')
+                    parseInt(document.getElementById(`regroup-${i}-2`).value || '0'),
+                    parseInt(document.getElementById(`regroup-${i}-3`).value || '0')
                 ];
                 const { num1, num2, sum: correctAnswer } = problems[i];
                 const hintElement = document.getElementById(`hint-${i}`);
@@ -215,7 +213,7 @@
                 const correctCarryOver = Math.floor(sum / 10);
                 carryOver = correctCarryOver;
 
-                if (correctDigits[i] !== userDigits[i] || (i > 0 && userRegroup[i-1] !== correctCarryOver)) {
+                if (correctDigits[i] !== userDigits[i] || userRegroup[i] !== correctCarryOver) {
                     const placeValue = ['thousands', 'hundreds', 'tens', 'ones'][i];
                     
                     hint += `Check your ${placeValue} place. `;
@@ -228,10 +226,8 @@
                         }
                     }
 
-                    if (i > 0 && correctCarryOver > 0) {
-                        if (userRegroup[i-1] !== correctCarryOver) {
-                            hint += `You need to regroup ${correctCarryOver} to the ${['hundreds', 'tens', 'ones'][i-1]} place. `;
-                        }
+                    if (correctCarryOver > 0 && userRegroup[i] !== correctCarryOver) {
+                        hint += `Remember to carry over ${correctCarryOver} to the next column. `;
                     }
 
                     hint += `${num1Digits[i]} + ${num2Digits[i]}${carryOver > 0 ? ' + ' + carryOver : ''} = ${sum}. `;
